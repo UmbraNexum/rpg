@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umbra Nexum RPG</title> <!-- Título da aba do navegador alterado aqui -->
+    <!-- Inclui o Tailwind CSS para estilização moderna e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define a fonte Inter para todo o corpo do documento */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        /* Esconde as setas de incremento/decremento em inputs numéricos para uma aparência mais limpa */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Para navegadores Firefox */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 p-4 sm:p-6 lg:p-8 flex items-center justify-center min-h-screen">
+    <div class="planilha-container bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl">
+        <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Umbra Nexum RPG</h1> <!-- Título principal da página alterado aqui -->
+
+        <!-- Seção de Pontos Disponíveis -->
+        <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200 text-center">
+            <p class="text-lg font-semibold text-blue-800">Pontos Disponíveis para Distribuir: <span id="pontosDisponiveis" class="text-2xl font-extrabold">74</span></p>
+            <p id="alertaPontos" class="text-red-600 font-semibold mt-2 hidden">Você excedeu os pontos disponíveis!</p>
+        </div>
+
+        <!-- Nova Seção de Categoria -->
+        <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200 text-center">
+            <p class="text-lg font-semibold text-purple-800">Categoria: <span id="categoriaOutput" class="text-2xl font-extrabold">ARAUTO</span></p>
+        </div>
+
+        <!-- Tabela de Atributos Principais -->
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Atributos Principais</h2>
+        <table class="w-full border-collapse rounded-lg overflow-hidden mb-8">
+            <thead class="bg-blue-600 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left font-semibold">Atributo</th>
+                    <th class="py-3 px-4 text-left font-semibold">Valor</th>
+                    <th class="py-3 px-4 text-left font-semibold">Modificador</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Força -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Força</td>
+                    <td class="py-3 px-4 border-b border-gray-200">
+                        <input type="number" id="forca" value="0" min="0"
+                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                    </td>
+                    <td id="forcaModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
+                </tr>
+                <!-- Destreza -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Destreza</td>
+                    <td class="py-3 px-4 border-b border-gray-200">
+                        <input type="number" id="destreza" value="0" min="0"
+                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                    </td>
+                    <td id="destrezaModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
+                </tr>
+                <!-- Vigor -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Vigor</td>
+                    <td class="py-3 px-4 border-b border-gray-200">
+                        <input type="number" id="vigor" value="0" min="0"
+                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                    </td>
+                    <td id="vigorModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
+                </tr>
+                <!-- Intelecto -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Intelecto</td>
+                    <td class="py-3 px-4 border-b border-gray-200">
+                        <input type="number" id="intelecto" value="0" min="0"
+                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                    </td>
+                    <td id="intelectoModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
+                </tr>
+                <!-- Raciocínio -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Raciocínio</td>
+                    <td class="py-3 px-4 border-b border-gray-200">
+                        <input type="number" id="raciocinio" value="0" min="0"
+                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                    </td>
+                    <td id="raciocinioModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
+                </tr>
+                <!-- Vontade -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Vontade</td>
+                    <td class="py-3 px-4 border-b border-gray-200">
+                        <input type="number" id="vontade" value="0" min="0"
+                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+                    </td>
+                    <td id="vontadeModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
+                </tr>
+                <!-- Os campos de usuário para At. Físico e At. Místico foram removidos -->
+            </tbody>
+        </table>
+
+        <!-- Tabela de Atributos Derivados -->
+        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Atributos Derivados</h2>
+        <table class="w-full border-collapse rounded-lg overflow-hidden">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left font-semibold">Atributo Derivado</th>
+                    <th class="py-3 px-4 text-left font-semibold">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- CORPO -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">CORPO</td>
+                    <td id="corpo" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- ESPÍRITO -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">ESPÍRITO</td>
+                    <td id="espirito" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Bônus -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Bônus</td>
+                    <td id="bonus" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Mana Total -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Mana Total</td>
+                    <td id="manaTotal" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Rec Mana -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Rec Mana</td>
+                    <td id="recMana" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Resist Mana -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Resist Mana</td>
+                    <td id="resistMana" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Vida -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Vida</td>
+                    <td id="vida" class="py-3 px-4 border-b border-gray-200 font-medium text-red-600"></td>
+                </tr>
+                <!-- At Físico -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">At. Físico</td>
+                    <td id="atFisico" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- At Místico -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">At. Místico</td>
+                    <td id="atMistico" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Estabilização -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Estabilização</td>
+                    <td id="estabilizacao" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Recuperação -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Recuperação</td>
+                    <td id="recuperacao" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Iniciativa -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Iniciativa</td>
+                    <td id="iniciativa" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Velocidade -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Velocidade</td>
+                    <td id="velocidade" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Tempo -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Tempo</td>
+                    <td id="tempo" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <!-- Capacidade de Carga -->
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Carga Leve (CLeve)</td>
+                    <td id="cleve" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Carga Média (CMéd)</td>
+                    <td id="cmed" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Carga Pesada (CPes)</td>
+                    <td id="cpes" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Carga Muito Pesada (CMPes)</td>
+                    <td id="cmpes" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+                <tr class="even:bg-gray-50 odd:bg-white">
+                    <td class="py-3 px-4 border-b border-gray-200">Limite de Carga Total (LMTC)</td>
+                    <td id="lmtc" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Constantes do jogo
+            const PONTOS_MAXIMOS_DISTRIBUICAO = 74; // Total de pontos para distribuir
+            const VALOR_BASE_ATRIBUTO = 0; // Atributos começam em 0
+
+            // Referências aos elementos de input dos atributos principais
+            const forcaInput = document.getElementById('forca');
+            const destrezaInput = document.getElementById('destreza');
+            const vigorInput = document.getElementById('vigor');
+            const intelectoInput = document.getElementById('intelecto');
+            const raciocinioInput = document.getElementById('raciocinio');
+            const vontadeInput = document.getElementById('vontade');
+
+            // Referências aos elementos de saída (onde os resultados são exibidos)
+            const pontosDisponiveisSpan = document.getElementById('pontosDisponiveis');
+            const alertaPontosDiv = document.getElementById('alertaPontos');
+            const categoriaOutput = document.getElementById('categoriaOutput'); // Nova referência para a Categoria
+
+            // Novas referências para os modificadores de atributo
+            const forcaModificadorOutput = document.getElementById('forcaModificador');
+            const destrezaModificadorOutput = document.getElementById('destrezaModificador');
+            const vigorModificadorOutput = document.getElementById('vigorModificador');
+            const intelectoModificadorOutput = document.getElementById('intelectoModificador');
+            const raciocinioModificadorOutput = document.getElementById('raciocinioModificador');
+            const vontadeModificadorOutput = document.getElementById('vontadeModificador');
+
+            const corpoOutput = document.getElementById('corpo');
+            const espiritoOutput = document.getElementById('espirito');
+            const bonusOutput = document.getElementById('bonus');
+            const manaTotalOutput = document.getElementById('manaTotal');
+            const recManaOutput = document.getElementById('recMana');
+            const resistManaOutput = document.getElementById('resistMana');
+            const vidaOutput = document.getElementById('vida');
+            const atFisicoOutput = document.getElementById('atFisico');
+            const atMisticoOutput = document.getElementById('atMistico');
+            const estabilizacaoOutput = document.getElementById('estabilizacao');
+            const recuperacaoOutput = document.getElementById('recuperacao');
+            const iniciativaOutput = document.getElementById('iniciativa');
+            const velocidadeOutput = document.getElementById('velocidade');
+            const tempoOutput = document.getElementById('tempo');
+            const cleveOutput = document.getElementById('cleve');
+            const cmedOutput = document.getElementById('cmed');
+            const cpesOutput = document.getElementById('cpes');
+            const cmpesOutput = document.getElementById('cmpes');
+            const lmtcOutput = document.getElementById('lmtc');
+
+            // Função para arredondar para o inteiro mais próximo
+            function arredondar(valor) {
+                return Math.round(valor);
+            }
+
+            // Função principal para calcular todos os atributos
+            function calcularAtributos() {
+                // Obter valores dos atributos principais, garantindo que sejam números e no mínimo o VALOR_BASE_ATRIBUTO (0)
+                const forca = Math.max(VALOR_BASE_ATRIBUTO, parseInt(forcaInput.value) || VALOR_BASE_ATRIBUTO);
+                const destreza = Math.max(VALOR_BASE_ATRIBUTO, parseInt(destrezaInput.value) || VALOR_BASE_ATRIBUTO);
+                const vigor = Math.max(VALOR_BASE_ATRIBUTO, parseInt(vigorInput.value) || VALOR_BASE_ATRIBUTO);
+                const intelecto = Math.max(VALOR_BASE_ATRIBUTO, parseInt(intelectoInput.value) || VALOR_BASE_ATRIBUTO);
+                const raciocinio = Math.max(VALOR_BASE_ATRIBUTO, parseInt(raciocinioInput.value) || VALOR_BASE_ATRIBUTO);
+                const vontade = Math.max(VALOR_BASE_ATRIBUTO, parseInt(vontadeInput.value) || VALOR_BASE_ATRIBUTO);
+
+                // Atualizar os valores dos inputs caso o usuário tente colocar menos do que o valor base
+                forcaInput.value = forca;
+                destrezaInput.value = destreza;
+                vigorInput.value = vigor;
+                intelectoInput.value = intelecto;
+                raciocinioInput.value = raciocinio;
+                vontadeInput.value = vontade;
+
+                // Calcular pontos gastos e pontos disponíveis
+                const pontosGastos = forca + destreza + vigor + intelecto + raciocinio + vontade;
+
+                const pontosDisponiveis = PONTOS_MAXIMOS_DISTRIBUICAO - pontosGastos;
+                pontosDisponiveisSpan.textContent = pontosDisponiveis;
+
+                // Exibir alerta se os pontos forem excedidos
+                if (pontosDisponiveis < 0) {
+                    pontosDisponiveisSpan.classList.add('text-red-600');
+                    alertaPontosDiv.classList.remove('hidden');
+                } else {
+                    pontosDisponiveisSpan.classList.remove('text-red-600');
+                    alertaPontosDiv.classList.add('hidden');
+                }
+
+                // --- Fórmulas dos Modificadores de Atributo ---
+                const forcaModificador = arredondar(((forca - 1) / 3) - 3);
+                forcaModificadorOutput.textContent = forcaModificador;
+
+                const destrezaModificador = arredondar(((destreza - 1) / 3) - 3);
+                destrezaModificadorOutput.textContent = destrezaModificador;
+
+                const vigorModificador = arredondar(((vigor - 1) / 3) - 3);
+                vigorModificadorOutput.textContent = vigorModificador;
+
+                const intelectoModificador = arredondar(((intelecto - 1) / 3) - 3);
+                intelectoModificadorOutput.textContent = intelectoModificador;
+
+                const raciocinioModificador = arredondar(((raciocinio - 1) / 3) - 3);
+                raciocinioModificadorOutput.textContent = raciocinioModificador;
+
+                const vontadeModificador = arredondar(((vontade - 1) / 3) - 3);
+                vontadeModificadorOutput.textContent = vontadeModificador;
+
+
+                // --- Fórmulas dos Atributos Derivados ---
+
+                // CORPO
+                const corpo = forca + destreza + vigor;
+                corpoOutput.textContent = corpo;
+
+                // ESPÍRITO
+                const espirito = intelecto + raciocinio + vontade;
+                espiritoOutput.textContent = espirito;
+
+                // Bônus
+                const bonus = arredondar(Math.abs(corpo - espirito) / 2);
+                bonusOutput.textContent = bonus;
+
+                // Determinar Categoria
+                let categoria = "ARAUTO";
+                if (corpo > espirito) {
+                    categoria = "MANIPULADOR";
+                } else if (espirito > corpo) {
+                    categoria = "EMISSOR";
+                }
+                categoriaOutput.textContent = categoria; // Atualiza o campo da Categoria
+
+                // Mana Total
+                const manaTotal = arredondar((raciocinio + destreza) / 2);
+                manaTotalOutput.textContent = manaTotal;
+
+                // Rec Mana
+                const recMana = arredondar(intelecto / 5);
+                recManaOutput.textContent = recMana;
+
+                // Resist Mana
+                const resistMana = intelecto + bonus;
+                resistManaOutput.textContent = resistMana;
+
+                // Vida
+                const vida = vigor * 2;
+                vidaOutput.textContent = vida;
+
+                // At Físico e At Místico baseados na Categoria
+                let atFisico;
+                let atMistico;
+
+                if (categoria === "MANIPULADOR") {
+                    atFisico = arredondar((forca + vigor) / 3 + bonus + destrezaModificador);
+                    atMistico = arredondar((intelecto + vontade) / 3 + raciocinioModificador);
+                } else if (categoria === "EMISSOR") {
+                    atFisico = arredondar((forca + vigor) / 3 + destrezaModificador);
+                    atMistico = arredondar((intelecto + vontade) / 3 + bonus + raciocinioModificador);
+                } else { // ARAUTO
+                    atFisico = arredondar((forca + vigor) / 3 + destrezaModificador);
+                    atMistico = arredondar((intelecto + vontade) / 3 + raciocinioModificador);
+                }
+
+                atFisicoOutput.textContent = atFisico;
+                atMisticoOutput.textContent = atMistico;
+
+                // Estabilização
+                const estabilizacao = arredondar((atFisico + atMistico) / 3);
+                estabilizacaoOutput.textContent = estabilizacao;
+
+                // Recuperação
+                const recuperacao = arredondar(vida / 6);
+                recuperacaoOutput.textContent = recuperacao;
+
+                // Iniciativa
+                const iniciativa = destreza + raciocinio;
+                iniciativaOutput.textContent = iniciativa;
+
+                // Velocidade
+                const velocidade = arredondar((forca + vigor) / 5);
+                velocidadeOutput.textContent = velocidade;
+
+                // Tempo
+                const tempo = (vigor + vontade) * 6;
+                tempoOutput.textContent = tempo;
+
+                // Capacidade de Carga
+                const cleve = forca * 2;
+                cleveOutput.textContent = cleve;
+                const cmed = forca * 3;
+                cmedOutput.textContent = cmed;
+                const cpes = forca * 4;
+                cpesOutput.textContent = cpes;
+                const cmpes = forca * 6;
+                cmpesOutput.textContent = cmpes;
+                const lmtc = forca * 8;
+                lmtcOutput.textContent = lmtc;
+            }
+
+            // Adiciona "escutadores" de evento para todos os inputs relevantes.
+            const allInputs = document.querySelectorAll('.base-attribute-input');
+            allInputs.forEach(input => {
+                input.addEventListener('input', calcularAtributos);
+            });
+
+            // Chama a função de cálculo uma vez ao carregar a página para exibir os valores iniciais
+            calcularAtributos();
+        });
+    </script>
+</body>
+</html>
