@@ -1,419 +1,440 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Umbra Nexum RPG</title> <!-- Título da aba do navegador alterado aqui -->
-    <!-- Inclui o Tailwind CSS para estilização moderna e responsiva -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Calculadora de Atributos</title>
     <style>
-        /* Define a fonte Inter para todo o corpo do documento */
         body {
-            font-family: "Inter", sans-serif;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            padding: 20px;
         }
-        /* Esconde as setas de incremento/decremento em inputs numéricos para uma aparência mais limpa */
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
         }
-        input[type="number"] {
-            -moz-appearance: textfield; /* Para navegadores Firefox */
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .attribute-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .attribute {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .attribute label {
+            flex-grow: 1;
+            font-weight: bold;
+            color: #555;
+        }
+        .attribute .input-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Espaço entre os elementos de controle */
+        }
+        .attribute input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 1em;
+        }
+        .attribute button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1em;
+            min-width: 30px;
+        }
+        .attribute button:hover {
+            background-color: #0056b3;
+        }
+        .attribute button:active {
+            background-color: #004085;
+        }
+        .attribute .mod-display {
+            width: 40px; /* Largura para o Mod */
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            margin-left: 10px; /* Espaço entre o input e o mod */
+        }
+        .results {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border: 1px solid #cce5d4;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        .results p {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .results span {
+            color: #000;
+        }
+        .category {
+            font-size: 1.5em;
+            color: #007bff;
+            margin-top: 15px;
+        }
+        .derived-attributes {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #e2e6ea;
+            border-radius: 5px;
+        }
+        .derived-attributes p {
+            margin: 8px 0;
+            font-weight: bold;
+            color: #495057;
+            display: flex;
+            justify-content: space-between; /* Alinha o nome à esquerda e os valores à direita */
+            align-items: center;
+            gap: 15px; /* Espaço entre o nome do atributo e o grupo de valores */
+
+            /* Estilos para o separador */
+            border-bottom: 1px solid #e0e0e0; /* Linha de separação */
+            padding-bottom: 10px; /* Espaço abaixo da linha */
+            margin-bottom: 10px; /* Espaço entre as linhas */
+        }
+        /* Remove a borda inferior do último item para não ter uma linha extra no final */
+        .derived-attributes p:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        /* Estilos para os valores dentro das linhas de atributos derivados */
+        .derived-attributes p .values-display {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espaçamento entre o valor de XP, valor base e valor total */
+            font-weight: normal; /* Sobrescreve o bold do <p> */
+        }
+        .derived-attributes p .values-display span {
+            min-width: 25px; /* Tamanho mínimo para os números */
+            text-align: right;
+        }
+        .derived-attributes p .values-display .xp-value-display {
+            color: #888; /* Cor mais suave para o valor XP */
+            font-size: 0.9em;
+        }
+        .derived-attributes p .values-display .total-value-display {
+            color: #007bff; /* Destaque para o valor total */
+            font-weight: bold;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 p-4 sm:p-6 lg:p-8 flex items-center justify-center min-h-screen">
-    <div class="planilha-container bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl">
-        <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">Umbra Nexum RPG</h1> <!-- Título principal da página alterado aqui -->
+<body>
+    <div class="container">
+        <h1>Calculadora de Atributos</h1>
 
-        <!-- Seção de Pontos Disponíveis -->
-        <div class="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200 text-center">
-            <p class="text-lg font-semibold text-blue-800">Pontos Disponíveis para Distribuir: <span id="pontosDisponiveis" class="text-2xl font-extrabold">74</span></p>
-            <p id="alertaPontos" class="text-red-600 font-semibold mt-2 hidden">Você excedeu os pontos disponíveis!</p>
+        <div class="results">
+            <p>CORPO: <span id="corpo-value">0</span></p>
+            <p>ESPÍRITO: <span id="espirito-value">0</span></p>
+            <p class="category">Categoria: <span id="categoria-value"></span></p>
         </div>
 
-        <!-- Nova Seção de Categoria -->
-        <div class="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200 text-center">
-            <p class="text-lg font-semibold text-purple-800">Categoria: <span id="categoriaOutput" class="text-2xl font-extrabold">ARAUTO</span></p>
+        <div class="attribute-group">
+            <h2>Atributos Físicos</h2>
+            <div class="attribute">
+                <label for="forca">Força:</label>
+                <div class="input-controls">
+                    <button type="button" data-attribute="forca" data-action="decrease">-</button>
+                    <input type="number" id="forca" value="0" min="0">
+                    <button type="button" data-attribute="forca" data-action="increase">+</button>
+                </div>
+                Mod: <span id="forca-mod" class="mod-display">0</span>
+            </div>
+            <div class="attribute">
+                <label for="destreza">Destreza:</label>
+                <div class="input-controls">
+                    <button type="button" data-attribute="destreza" data-action="decrease">-</button>
+                    <input type="number" id="destreza" value="0" min="0">
+                    <button type="button" data-attribute="destreza" data-action="increase">+</button>
+                </div>
+                Mod: <span id="destreza-mod" class="mod-display">0</span>
+            </div>
+            <div class="attribute">
+                <label for="vigor">Vigor:</label>
+                <div class="input-controls">
+                    <button type="button" data-attribute="vigor" data-action="decrease">-</button>
+                    <input type="number" id="vigor" value="0" min="0">
+                    <button type="button" data-attribute="vigor" data-action="increase">+</button>
+                </div>
+                Mod: <span id="vigor-mod" class="mod-display">0</span>
+            </div>
         </div>
 
-        <!-- Tabela de Atributos Principais -->
-        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Atributos Principais</h2>
-        <table class="w-full border-collapse rounded-lg overflow-hidden mb-8">
-            <thead class="bg-blue-600 text-white">
-                <tr>
-                    <th class="py-3 px-4 text-left font-semibold">Atributo</th>
-                    <th class="py-3 px-4 text-left font-semibold">Valor</th>
-                    <th class="py-3 px-4 text-left font-semibold">Modificador</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Força -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Força</td>
-                    <td class="py-3 px-4 border-b border-gray-200">
-                        <input type="number" id="forca" value="0" min="0"
-                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                    </td>
-                    <td id="forcaModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
-                </tr>
-                <!-- Destreza -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Destreza</td>
-                    <td class="py-3 px-4 border-b border-gray-200">
-                        <input type="number" id="destreza" value="0" min="0"
-                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                    </td>
-                    <td id="destrezaModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
-                </tr>
-                <!-- Vigor -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Vigor</td>
-                    <td class="py-3 px-4 border-b border-gray-200">
-                        <input type="number" id="vigor" value="0" min="0"
-                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                    </td>
-                    <td id="vigorModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
-                </tr>
-                <!-- Intelecto -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Intelecto</td>
-                    <td class="py-3 px-4 border-b border-gray-200">
-                        <input type="number" id="intelecto" value="0" min="0"
-                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                    </td>
-                    <td id="intelectoModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
-                </tr>
-                <!-- Raciocínio -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Raciocínio</td>
-                    <td class="py-3 px-4 border-b border-gray-200">
-                        <input type="number" id="raciocinio" value="0" min="0"
-                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                    </td>
-                    <td id="raciocinioModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
-                </tr>
-                <!-- Vontade -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Vontade</td>
-                    <td class="py-3 px-4 border-b border-gray-200">
-                        <input type="number" id="vontade" value="0" min="0"
-                               class="base-attribute-input w-24 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
-                    </td>
-                    <td id="vontadeModificador" class="py-3 px-4 border-b border-gray-200 font-medium text-blue-700"></td>
-                </tr>
-                <!-- Os campos de usuário para At. Físico e At. Místico foram removidos -->
-            </tbody>
-        </table>
+        <div class="attribute-group">
+            <h2>Atributos Mentais</h2>
+            <div class="attribute">
+                <label for="intelecto">Intelecto:</label>
+                <div class="input-controls">
+                    <button type="button" data-attribute="intelecto" data-action="decrease">-</button>
+                    <input type="number" id="intelecto" value="0" min="0">
+                    <button type="button" data-attribute="intelecto" data-action="increase">+</button>
+                </div>
+                Mod: <span id="intelecto-mod" class="mod-display">0</span>
+            </div>
+            <div class="attribute">
+                <label for="raciocinio">Raciocínio:</label>
+                <div class="input-controls">
+                    <button type="button" data-attribute="raciocinio" data-action="decrease">-</button>
+                    <input type="number" id="raciocinio" value="0" min="0">
+                    <button type="button" data-attribute="raciocinio" data-action="increase">+</button>
+                </div>
+                Mod: <span id="raciocinio-mod" class="mod-display">0</span>
+            </div>
+            <div class="attribute">
+                <label for="determinacao">Determinação:</label>
+                <div class="input-controls">
+                    <button type="button" data-attribute="determinacao" data-action="decrease">-</button>
+                    <input type="number" id="determinacao" value="0" min="0">
+                    <button type="button" data-attribute="determinacao" data-action="increase">+</button>
+                </div>
+                Mod: <span id="determinacao-mod" class="mod-display">0</span>
+            </div>
+        </div>
 
-        <!-- Tabela de Atributos Derivados -->
-        <h2 class="text-2xl font-semibold mb-4 text-gray-800">Atributos Derivados</h2>
-        <table class="w-full border-collapse rounded-lg overflow-hidden">
-            <thead class="bg-green-600 text-white">
-                <tr>
-                    <th class="py-3 px-4 text-left font-semibold">Atributo Derivado</th>
-                    <th class="py-3 px-4 text-left font-semibold">Valor</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- CORPO -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">CORPO</td>
-                    <td id="corpo" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- ESPÍRITO -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">ESPÍRITO</td>
-                    <td id="espirito" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Bônus -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Bônus</td>
-                    <td id="bonus" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Mana Total -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Mana Total</td>
-                    <td id="manaTotal" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Rec Mana -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Rec Mana</td>
-                    <td id="recMana" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Resist Mana -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Resist Mana</td>
-                    <td id="resistMana" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Vida -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Vida</td>
-                    <td id="vida" class="py-3 px-4 border-b border-gray-200 font-medium text-red-600"></td>
-                </tr>
-                <!-- At Físico -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">At. Físico</td>
-                    <td id="atFisico" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- At Místico -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">At. Místico</td>
-                    <td id="atMistico" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Estabilização -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Estabilização</td>
-                    <td id="estabilizacao" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Recuperação -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Recuperação</td>
-                    <td id="recuperacao" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Iniciativa -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Iniciativa</td>
-                    <td id="iniciativa" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Velocidade -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Velocidade</td>
-                    <td id="velocidade" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Tempo -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Tempo</td>
-                    <td id="tempo" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <!-- Capacidade de Carga -->
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Carga Leve (CLeve)</td>
-                    <td id="cleve" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Carga Média (CMéd)</td>
-                    <td id="cmed" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Carga Pesada (CPes)</td>
-                    <td id="cpes" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Carga Muito Pesada (CMPes)</td>
-                    <td id="cmpes" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-                <tr class="even:bg-gray-50 odd:bg-white">
-                    <td class="py-3 px-4 border-b border-gray-200">Limite de Carga Total (LMTC)</td>
-                    <td id="lmtc" class="py-3 px-4 border-b border-gray-200 font-medium"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="derived-attributes">
+            <h2>Valores Derivados</h2>
+            <p>Bônus: <span id="bonus-value">0</span></p> 
+            <p>Vida: <span id="vida-value">0</span></p>
+            
+            <p>Mana:
+                <span class="values-display">
+                    <span class="xp-value-display" id="mana-xp">0</span>
+                    <span id="mana-value">0</span>
+                    <span class="total-value-display" id="mana-total">0</span>
+                </span>
+            </p>
+            <p>Recuperação de Mana:
+                <span class="values-display">
+                    <span class="xp-value-display" id="rec-mana-xp">0</span>
+                    <span id="rec-mana-value">0</span>
+                    <span class="total-value-display" id="rec-mana-total">0</span>
+                </span>
+            </p>
+            <p>Resistência de Mana:
+                <span class="values-display">
+                    <span class="xp-value-display" id="res-mana-xp">0</span>
+                    <span id="res-mana-value">0</span>
+                    <span class="total-value-display" id="res-mana-total">0</span>
+                </span>
+            </p>
+            <p>Restauração:
+                <span class="values-display">
+                    <span class="xp-value-display" id="restauracao-xp">0</span>
+                    <span id="restauracao-value">0</span>
+                    <span class="total-value-display" id="restauracao-total">0</span>
+                </span>
+            </p>
+            <p>Estabilização:
+                <span class="values-display">
+                    <span class="xp-value-display" id="estabilizacao-xp">0</span>
+                    <span id="estabilizacao-value">0</span>
+                    <span class="total-value-display" id="estabilizacao-total">0</span>
+                </span>
+            </p>
+
+            <p>Velocidade: <span id="velocidade-value">0</span></p>
+            <p>Velocidade Máx: <span id="veloc-max-value">0</span></p>
+            <p>At. Físico: <span id="at-fisico-value">0</span></p>
+            <p>At. Místico: <span id="at-mistico-value">0</span></p>
+            <p>Def. Física: <span id="def-fisica-value">0</span></p>
+            <p>Def. Mística: <span id="def-mistica-value">0</span></p>
+            <p>XP: <span id="xp-value">0</span></p> 
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Constantes do jogo
-            const PONTOS_MAXIMOS_DISTRIBUICAO = 74; // Total de pontos para distribuir
-            const VALOR_BASE_ATRIBUTO = 0; // Atributos começam em 0
+        document.addEventListener('DOMContentLoaded', () => {
+            const attributes = {
+                forca: 0,
+                destreza: 0,
+                vigor: 0,
+                intelecto: 0,
+                raciocinio: 0,
+                determinacao: 0
+            };
 
-            // Referências aos elementos de input dos atributos principais
-            const forcaInput = document.getElementById('forca');
-            const destrezaInput = document.getElementById('destreza');
-            const vigorInput = document.getElementById('vigor');
-            const intelectoInput = document.getElementById('intelecto');
-            const raciocinioInput = document.getElementById('raciocinio');
-            const vontadeInput = document.getElementById('vontade');
+            // Função para calcular o modificador (usando Math.round)
+            const calculateModifier = (attributeValue) => {
+                return Math.round(((attributeValue - 1) / 2) - 4);
+            };
 
-            // Referências aos elementos de saída (onde os resultados são exibidos)
-            const pontosDisponiveisSpan = document.getElementById('pontosDisponiveis');
-            const alertaPontosDiv = document.getElementById('alertaPontos');
-            const categoriaOutput = document.getElementById('categoriaOutput'); // Nova referência para a Categoria
+            const updateDisplay = () => {
+                const modifiers = {}; // Objeto para armazenar os modificadores
 
-            // Novas referências para os modificadores de atributo
-            const forcaModificadorOutput = document.getElementById('forcaModificador');
-            const destrezaModificadorOutput = document.getElementById('destrezaModificador');
-            const vigorModificadorOutput = document.getElementById('vigorModificador');
-            const intelectoModificadorOutput = document.getElementById('intelectoModificador');
-            const raciocinioModificadorOutput = document.getElementById('raciocinioModificador');
-            const vontadeModificadorOutput = document.getElementById('vontadeModificador');
+                // Atualiza inputs e calcula modificadores
+                for (const attr in attributes) {
+                    const attributeValue = attributes[attr];
+                    document.getElementById(attr).value = attributeValue;
 
-            const corpoOutput = document.getElementById('corpo');
-            const espiritoOutput = document.getElementById('espirito');
-            const bonusOutput = document.getElementById('bonus');
-            const manaTotalOutput = document.getElementById('manaTotal');
-            const recManaOutput = document.getElementById('recMana');
-            const resistManaOutput = document.getElementById('resistMana');
-            const vidaOutput = document.getElementById('vida');
-            const atFisicoOutput = document.getElementById('atFisico');
-            const atMisticoOutput = document.getElementById('atMistico');
-            const estabilizacaoOutput = document.getElementById('estabilizacao');
-            const recuperacaoOutput = document.getElementById('recuperacao');
-            const iniciativaOutput = document.getElementById('iniciativa');
-            const velocidadeOutput = document.getElementById('velocidade');
-            const tempoOutput = document.getElementById('tempo');
-            const cleveOutput = document.getElementById('cleve');
-            const cmedOutput = document.getElementById('cmed');
-            const cpesOutput = document.getElementById('cpes');
-            const cmpesOutput = document.getElementById('cmpes');
-            const lmtcOutput = document.getElementById('lmtc');
-
-            // Função para arredondar para o inteiro mais próximo
-            function arredondar(valor) {
-                return Math.round(valor);
-            }
-
-            // Função principal para calcular todos os atributos
-            function calcularAtributos() {
-                // Obter valores dos atributos principais, garantindo que sejam números e no mínimo o VALOR_BASE_ATRIBUTO (0)
-                const forca = Math.max(VALOR_BASE_ATRIBUTO, parseInt(forcaInput.value) || VALOR_BASE_ATRIBUTO);
-                const destreza = Math.max(VALOR_BASE_ATRIBUTO, parseInt(destrezaInput.value) || VALOR_BASE_ATRIBUTO);
-                const vigor = Math.max(VALOR_BASE_ATRIBUTO, parseInt(vigorInput.value) || VALOR_BASE_ATRIBUTO);
-                const intelecto = Math.max(VALOR_BASE_ATRIBUTO, parseInt(intelectoInput.value) || VALOR_BASE_ATRIBUTO);
-                const raciocinio = Math.max(VALOR_BASE_ATRIBUTO, parseInt(raciocinioInput.value) || VALOR_BASE_ATRIBUTO);
-                const vontade = Math.max(VALOR_BASE_ATRIBUTO, parseInt(vontadeInput.value) || VALOR_BASE_ATRIBUTO);
-
-                // Atualizar os valores dos inputs caso o usuário tente colocar menos do que o valor base
-                forcaInput.value = forca;
-                destrezaInput.value = destreza;
-                vigorInput.value = vigor;
-                intelectoInput.value = intelecto;
-                raciocinioInput.value = raciocinio;
-                vontadeInput.value = vontade;
-
-                // Calcular pontos gastos e pontos disponíveis
-                const pontosGastos = forca + destreza + vigor + intelecto + raciocinio + vontade;
-
-                const pontosDisponiveis = PONTOS_MAXIMOS_DISTRIBUICAO - pontosGastos;
-                pontosDisponiveisSpan.textContent = pontosDisponiveis;
-
-                // Exibir alerta se os pontos forem excedidos
-                if (pontosDisponiveis < 0) {
-                    pontosDisponiveisSpan.classList.add('text-red-600');
-                    alertaPontosDiv.classList.remove('hidden');
-                } else {
-                    pontosDisponiveisSpan.classList.remove('text-red-600');
-                    alertaPontosDiv.classList.add('hidden');
+                    const modifier = calculateModifier(attributeValue);
+                    document.getElementById(`${attr}-mod`).textContent = modifier;
+                    modifiers[attr] = modifier; // Armazena o modificador
                 }
 
-                // --- Fórmulas dos Modificadores de Atributo ---
-                const forcaModificador = arredondar(((forca - 1) / 3) - 3);
-                forcaModificadorOutput.textContent = forcaModificador;
+                // Cálculos de CORPO, ESPÍRITO e Categoria
+                const corpo = attributes.forca + attributes.destreza + attributes.vigor;
+                const espirito = attributes.intelecto + attributes.raciocinio + attributes.determinacao;
 
-                const destrezaModificador = arredondar(((destreza - 1) / 3) - 3);
-                destrezaModificadorOutput.textContent = destrezaModificador;
+                document.getElementById('corpo-value').textContent = corpo;
+                document.getElementById('espirito-value').textContent = espirito;
 
-                const vigorModificador = arredondar(((vigor - 1) / 3) - 3);
-                vigorModificadorOutput.textContent = vigorModificador;
-
-                const intelectoModificador = arredondar(((intelecto - 1) / 3) - 3);
-                intelectoModificadorOutput.textContent = intelectoModificador;
-
-                const raciocinioModificador = arredondar(((raciocinio - 1) / 3) - 3);
-                raciocinioModificadorOutput.textContent = raciocinioModificador;
-
-                const vontadeModificador = arredondar(((vontade - 1) / 3) - 3);
-                vontadeModificadorOutput.textContent = vontadeModificador;
-
-
-                // --- Fórmulas dos Atributos Derivados ---
-
-                // CORPO
-                const corpo = forca + destreza + vigor;
-                corpoOutput.textContent = corpo;
-
-                // ESPÍRITO
-                const espirito = intelecto + raciocinio + vontade;
-                espiritoOutput.textContent = espirito;
-
-                // Bônus
-                const bonus = arredondar(Math.abs(corpo - espirito) / 2);
-                bonusOutput.textContent = bonus;
-
-                // Determinar Categoria
-                let categoria = "ARAUTO";
+                let categoria = '';
                 if (corpo > espirito) {
-                    categoria = "MANIPULADOR";
+                    categoria = 'MANIPULADOR';
                 } else if (espirito > corpo) {
-                    categoria = "EMISSOR";
+                    categoria = 'EMISSOR';
+                } else {
+                    categoria = 'ARAUTO';
                 }
-                categoriaOutput.textContent = categoria; // Atualiza o campo da Categoria
+                document.getElementById('categoria-value').textContent = categoria;
 
-                // Mana Total
-                const manaTotal = arredondar((raciocinio + destreza) / 2);
-                manaTotalOutput.textContent = manaTotal;
+                // --- Cálculo de XP (feito primeiro pois será usado em outros cálculos) ---
+                const xp = Math.trunc((corpo + espirito - 72) / 5);
+                document.getElementById('xp-value').textContent = xp; 
 
-                // Rec Mana
-                const recMana = arredondar(intelecto / 5);
-                recManaOutput.textContent = recMana;
+                // --- Cálculos de Atributos Derivados ---
 
-                // Resist Mana
-                const resistMana = intelecto + bonus;
-                resistManaOutput.textContent = resistMana;
+                // Bônus = (CORPO - ESPÍRITO) / 2 arredondado para o inteiro mais próximo, em módulo
+                const bonus = Math.round(Math.abs((corpo - espirito) / 2));
+                document.getElementById('bonus-value').textContent = bonus; 
 
-                // Vida
-                const vida = vigor * 2;
-                vidaOutput.textContent = vida;
+                // Metade do Bônus arredondado para o inteiro mais próximo (para uso em outras fórmulas)
+                const metadeBonusArredondado = Math.round(bonus / 2);
 
-                // At Físico e At Místico baseados na Categoria
-                let atFisico;
-                let atMistico;
+                // Vida = 2 * Vigor
+                const vida = 2 * attributes.vigor;
+                document.getElementById('vida-value').textContent = vida; 
 
-                if (categoria === "MANIPULADOR") {
-                    atFisico = arredondar((forca + vigor) / 3 + bonus + destrezaModificador);
-                    atMistico = arredondar((intelecto + vontade) / 3 + raciocinioModificador);
-                } else if (categoria === "EMISSOR") {
-                    atFisico = arredondar((forca + vigor) / 3 + destrezaModificador);
-                    atMistico = arredondar((intelecto + vontade) / 3 + bonus + raciocinioModificador);
-                } else { // ARAUTO
-                    atFisico = arredondar((forca + vigor) / 3 + destrezaModificador);
-                    atMistico = arredondar((intelecto + vontade) / 3 + raciocinioModificador);
+                // Mana = Intelecto + 2 * Mod do Intelecto
+                const mana = attributes.intelecto + (2 * modifiers.intelecto);
+                document.getElementById('mana-value').textContent = mana;
+                document.getElementById('mana-xp').textContent = xp; 
+                document.getElementById('mana-total').textContent = mana + xp; 
+
+                // Recuperação de Mana = Metade do Bônus arredondado para o inteiro mais próximo + Mod de Intelecto
+                const recuperacaoMana = metadeBonusArredondado + modifiers.intelecto;
+                document.getElementById('rec-mana-value').textContent = recuperacaoMana;
+                document.getElementById('rec-mana-xp').textContent = xp; 
+                document.getElementById('rec-mana-total').textContent = recuperacaoMana + xp; 
+
+                // Resistência de Mana = Bônus + Mod de Raciocínio + Mod de Destreza
+                const resistenciaMana = bonus + modifiers.raciocinio + modifiers.destreza;
+                document.getElementById('res-mana-value').textContent = resistenciaMana;
+                document.getElementById('res-mana-xp').textContent = xp; 
+                document.getElementById('res-mana-total').textContent = resistenciaMana + xp; 
+
+                // Restauração = 2 * Mod de Vigor
+                const restauracao = 2 * modifiers.vigor;
+                document.getElementById('restauracao-value').textContent = restauracao;
+                document.getElementById('restauracao-xp').textContent = xp; 
+                document.getElementById('restauracao-total').textContent = restauracao + xp; 
+
+                // Primeiro calculamos At. Físico, Def. Física, At. Místico e Def. Mística
+                // para que Estabilização possa usá-los.
+                let atFisico = 10 + modifiers.forca;
+                let atMistico = 10 + modifiers.intelecto;
+                let defFisica = 10 + modifiers.destreza;
+                let defMistica = 10 + modifiers.raciocinio;
+
+                if (categoria === 'MANIPULADOR') {
+                    atFisico += metadeBonusArredondado;
+                    defFisica += metadeBonusArredondado;
+                } else if (categoria === 'EMISSOR') {
+                    atMistico += metadeBonusArredondado;
+                    defMistica += metadeBonusArredondado;
                 }
+                // Se for 'ARAUTO', nenhuma adição acontece
 
-                atFisicoOutput.textContent = atFisico;
-                atMisticoOutput.textContent = atMistico;
+                document.getElementById('at-fisico-value').textContent = atFisico;
+                document.getElementById('at-mistico-value').textContent = atMistico;
+                document.getElementById('def-fisica-value').textContent = defFisica;
+                document.getElementById('def-mistica-value').textContent = defMistica;
+                
+                // Estabilização = (Def. Física + Def. Mística) / 3 arredondado para o inteiro mais próximo
+                const estabilizacao = Math.round((defFisica + defMistica) / 3);
+                document.getElementById('estabilizacao-value').textContent = estabilizacao;
+                document.getElementById('estabilizacao-xp').textContent = xp; 
+                document.getElementById('estabilizacao-total').textContent = estabilizacao + xp; 
 
-                // Estabilização
-                const estabilizacao = arredondar((atFisico + atMistico) / 3);
-                estabilizacaoOutput.textContent = estabilizacao;
+                // Velocidade = ((Força + Vigor) / 7) - 1 (arredondado para o inteiro mais próximo)
+                const velocidade = Math.round(((attributes.forca + attributes.vigor) / 7) - 1);
+                document.getElementById('velocidade-value').textContent = velocidade; 
 
-                // Recuperação
-                const recuperacao = arredondar(vida / 6);
-                recuperacaoOutput.textContent = recuperacao;
+                // Velocidade Máx = Velocidade * 1.5 (arredondado para o inteiro mais próximo)
+                const velocMax = Math.round(velocidade * 1.5);
+                document.getElementById('veloc-max-value').textContent = velocMax; 
+            };
 
-                // Iniciativa
-                const iniciativa = destreza + raciocinio;
-                iniciativaOutput.textContent = iniciativa;
+            // Event listeners para os botões (+/-)
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const attributeName = event.target.dataset.attribute;
+                    const action = event.target.dataset.action;
 
-                // Velocidade
-                const velocidade = arredondar((forca + vigor) / 5);
-                velocidadeOutput.textContent = velocidade;
-
-                // Tempo
-                const tempo = (vigor + vontade) * 6;
-                tempoOutput.textContent = tempo;
-
-                // Capacidade de Carga
-                const cleve = forca * 2;
-                cleveOutput.textContent = cleve;
-                const cmed = forca * 3;
-                cmedOutput.textContent = cmed;
-                const cpes = forca * 4;
-                cpesOutput.textContent = cpes;
-                const cmpes = forca * 6;
-                cmpesOutput.textContent = cmpes;
-                const lmtc = forca * 8;
-                lmtcOutput.textContent = lmtc;
-            }
-
-            // Adiciona "escutadores" de evento para todos os inputs relevantes.
-            const allInputs = document.querySelectorAll('.base-attribute-input');
-            allInputs.forEach(input => {
-                input.addEventListener('input', calcularAtributos);
+                    if (action === 'increase') {
+                        attributes[attributeName]++;
+                    } else if (action === 'decrease') {
+                        if (attributes[attributeName] > 0) { // Evita valores negativos
+                            attributes[attributeName]--;
+                        }
+                    }
+                    updateDisplay(); 
+                });
             });
 
-            // Chama a função de cálculo uma vez ao carregar a página para exibir os valores iniciais
-            calcularAtributos();
+            // Event listeners para as mudanças diretas nos campos de input
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('input', (event) => {
+                    const attributeName = event.target.id;
+                    let value = parseInt(event.target.value);
+
+                    if (isNaN(value) || value < 0) {
+                        value = 0;
+                    }
+                    attributes[attributeName] = value;
+                    updateDisplay(); 
+                });
+
+                input.addEventListener('blur', updateDisplay);
+            });
+
+            updateDisplay();
         });
     </script>
 </body>
